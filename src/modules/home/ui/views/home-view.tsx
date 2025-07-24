@@ -6,6 +6,11 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 
+/**
+ * Displays the authenticated user's name and provides a sign-out button that redirects to the sign-in page upon successful sign-out.
+ *
+ * Renders a loading message while the authentication session is being retrieved.
+ */
 export default function HomeView() {
     const router = useRouter();
     const { data: session } = authClient.useSession()
