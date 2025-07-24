@@ -2,13 +2,12 @@
 
 import { z } from "zod";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { OctagonAlertIcon } from "lucide-react";
-
-
+import { useRouter } from "next/navigation";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
@@ -20,9 +19,9 @@ import { Card, CardContent } from "@/components/ui/card";
 export const SignUpView = () => {
 
 
-    const router = useRouter();
     const [error, setError] = useState<string | null>(null);
     const [pending, setPending] = useState(false);
+    const router = useRouter();
 
     const formSchema = z.object({
         email: z.string().email(),
@@ -53,11 +52,35 @@ export const SignUpView = () => {
                 email: data.email,
                 password: data.password,
                 name: data.name,
+                callbackURL: "/",
             },
             {
                 onSuccess: () => {
                     setPending(false);
                     router.push("/");
+                },
+                onError: ({ error }) => {
+                    setPending(false);
+                    setError(error.message || "Something went wrong");
+                }
+            }
+        )
+    }
+
+    const onSocialSubmit = (provider: "google" | "github") => {
+        setError(null);
+        setPending(true);
+
+        authClient.signIn.social(
+            {
+                provider,
+                callbackURL: "/",
+                //disableRedirect: true,
+            },
+            {
+                onSuccess: () => {
+                    setPending(false);
+                    //router.push("/");
                 },
                 onError: ({ error }) => {
                     setPending(false);
@@ -172,16 +195,18 @@ export const SignUpView = () => {
                                         className="w-full"
                                         type="button"
                                         disabled={pending}
+                                        onClick={() => onSocialSubmit("google")}
                                     >
-                                        Google
+                                        <FaGoogle className="mr-2" />
                                     </Button>
                                     <Button
                                         variant="outline"
                                         className="w-full"
                                         type="button"
                                         disabled={pending}
+                                        onClick={() => onSocialSubmit("github")}
                                     >
-                                        Github
+                                        <FaGithub className="mr-2" />
                                     </Button>
                                 </div>
                                 <div className="text-center text-sm">
