@@ -34,7 +34,7 @@ interface ResponsiveDialogProps {
 
 
 
-const ResponsiveDialog = ({
+export const ResponsiveDialog = ({
     title,
     description,
     children,
@@ -73,4 +73,3 @@ const ResponsiveDialog = ({
     );
 }
 
-export default ResponsiveDialog;
