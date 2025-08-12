@@ -3,8 +3,15 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import ErrorState from "@/components/error-state";
+import Emptystate from "@/components/empty-state";
 import LoadingState from "@/components/loading-state";
 import { useTRPC } from "@/trpc/client";
+import { DataTable } from "../components/data-table";
+import { columns } from "../components/columns";
+
+
+
+
 
 
 
@@ -17,8 +24,14 @@ export const AgentsView = () => {
 
 
     return (
-        <div>
-            {JSON.stringify(data, null, 2)}
+        <div className="p-4 pb-4 flex flex-1 px-4 md:px-8  flex-col gap-y-4">
+            <DataTable columns={columns}  data={data} />
+            {data.length === 0 && (
+                <Emptystate
+                    title="Create your first agent"
+                    description="Create an agent to join your meetings. Each agent will follow your instructions and can interact with participants during the call."
+                />
+            )}
         </div>
     )
 }
